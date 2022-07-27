@@ -1,0 +1,693 @@
+algoritmo Aguecia_de_Turismo;
+// Síntese
+//  Objetivo: Este algoritmo deve fornecer possíveis ideias de destino para o usuário, baseando-se em dados fornecidos a partir das perguntas realizadas por esse código, com o fito de personalizar o agenciamento de viagens.
+//  Entrada : São as respostas dadas pelo usuário a partir das perguntas realizadas pelo programa.
+//  Saída   : É o destino final recomendado e suas principais características, de forma a basear-se no perfil estabelecido pelas respostas do usuário.
+
+
+principal
+	// DECLARAÇÕES
+	texto opcao, opcao2;
+	texto vetorCerto[10], vetorErrado[10], pergunta;
+	inteiro contador, somaVet, somaErrado;
+	logico encerrou, resp_valida, resp_valida1;
+	// Declarações iniciais das variáveis com seus respectivos tipos (logico é a variável que indica verdadeiro ou falso)
+	// INSTRUÇÕES
+
+	Cabecalho();
+
+	vetorErrado[0] = "nulo";
+	vetorErrado[1] = "nulo";
+	vetorErrado[2] = "nulo";
+	vetorErrado[3] = "nulo";
+	vetorErrado[4] = "nulo";
+	vetorErrado[5] = "nulo";
+	vetorErrado[6] = "nulo";
+	vetorErrado[7] = "nulo";
+	vetorErrado[8] = "nulo";
+	vetorErrado[9] = "nulo";
+
+	vetorCerto[0] = "nulo";
+	vetorCerto[1] = "nulo";
+	vetorCerto[2] = "nulo";
+	vetorCerto[3] = "nulo";
+	vetorCerto[4] = "nulo";
+	// Inicialização dos vetores como nulos, para evitar problemas de funcionamento do código e evitar que o programa teste vetores vazios.
+	contador = -1;
+	somaVet = 0;
+	somaErrado = 0;
+	encerrou = falso;
+	resp_valida = falso;
+	resp_valida1 = falso;
+	// Contador como -1 para inicializar, haja vista que já existem informações verdadeiras no vetor 0 e para começar o programa sem respostas para a primeira pergunta
+	faca
+		resp_valida1 = verdadeiro;
+		escreval(" Você gostaria de uma viagem nacional ou internacional?");
+		escreva(" -R: ");
+		leia(opcao2);
+		// Caso respostas inválida, repetir o processo da pergunta
+
+		opcao2 = maiusculo(opcao2);
+
+
+		se (comparaTexto(opcao2, "NACIONAL") == 0) entao
+			AvisoPerguntas();
+			faca
+				pergunta = BancoDeDados(vetorCerto, contador, vetorErrado, somaErrado);
+				// Envio de pergunta para o banco de dados de palavras certas quantas palavras certas, palavras erras e quantas palavbras erradas. Para assim retornar a primeira característica de um destino válido
+				se (comparaTexto(pergunta, "finaliza") != 0) entao // Caso banco de dados retorne ja um destino compatível após perguntas
+					faca
+						resp_valida = verdadeiro;
+						escreval("");
+						escreval(" Você gosta de " + pergunta + "?");
+						escreva(" -R: ");
+						leia(opcao);
+						opcao = maiusculo(opcao);
+						se(comparaTexto(opcao, "S") == 0) entao
+							vetorCerto[somaVet] = pergunta;
+							somaVet = somaVet + 1;
+							contador = contador + 1;
+							// Soma no vetor de palavras certas e salva nesse vetor a resposta equivalente a pergunta realizada
+						senao
+							se (comparaTexto(opcao, "N") != 0) entao
+								escreval("");
+								escreval(" Resposta inválida!");
+								escreval("");
+								resp_valida = falso;
+								// Resposta inválida caso não tenha escrito nem S e nem N
+							senao
+								vetorErrado[somaErrado] = pergunta;
+								somaErrado = somaErrado + 1;
+								// Soma no vetor de palavras erradas e salva nesse vetor a resposta não equivalente a pergunta realizada
+							fimSe
+						fimSe
+					enquanto(resp_valida == falso);
+				senao // Caso o bando de dados tenha encontrado o destino final
+					encerrou = verdadeiro;
+					escreval("");
+					escreval(" - Obrigado por utilizar, e aproveite sua viagem!!");
+				fimSe
+				//escreval(vetorErrado[0]);
+			enquanto(encerrou == falso);
+		senao
+			se (comparaTexto(opcao2, "INTERNACIONAL") == 0) entao
+				AvisoPerguntas();
+				faca
+					pergunta = BancoDeDadosInternacional(vetorCerto, contador, vetorErrado, somaErrado);
+					// Envio de pergunta para o banco de dados resposta de retorno do banco de dados é armazenado no vetor verdadeiro.
+					se (comparaTexto(pergunta, "finaliza") != 0) entao //
+						faca
+							resp_valida = verdadeiro;
+							escreval("");
+							escreval(" Você gosta de " + pergunta + "?");
+							escreva(" -R: ");
+							leia(opcao);
+							opcao = maiusculo(opcao);
+							se(comparaTexto(opcao, "S") == 0) entao
+								vetorCerto[somaVet] = pergunta;
+								somaVet = somaVet + 1;
+								contador = contador + 1;
+								// Soma no vetor de palavras certas e salva nesse vetor a resposta equivalente a pergunta realizada
+							senao
+								se (comparaTexto(opcao, "N") != 0) entao
+									escreval("");
+									escreval(" Resposta inválida!");
+									escreval("");
+									resp_valida = falso;
+									// Resposta inválida caso não tenha escrito nem S e nem N
+								senao
+									vetorErrado[somaErrado] = pergunta;
+									somaErrado = somaErrado + 1;
+									// Soma no vetor de palavras erradas e salva nesse vetor a resposta não equivalente a pergunta realizada
+								fimSe
+							fimSe
+						enquanto(resp_valida == falso);
+					senao
+						encerrou = verdadeiro;
+						escreval("");
+						escreval(" - Obrigado por utilizar, e aproveite sua viagem!!");
+					fimSe
+					//escreval(vetorErrado[0]);
+				enquanto(encerrou == falso);
+			senao
+				escreval("");
+				escreval(" Resposta inválida!");
+				escreval("");
+				resp_valida1 = falso;
+			fimSe
+		fimSe
+	enquanto (resp_valida1 == falso);
+fimPrincipal
+
+// ===============================================================================================================================================================
+
+procedimento Cabecalho()
+	escreval("===============================================");
+	escreval("              AGENCIA DE VIAGENS");
+	escreval("===============================================");
+	escreval("");
+	escreval("   Esse software foi criado com o intuito de");
+	escreval("   te ajudar a escolher sua proxima viagem!");
+	escreval("_______________________________________________");
+	escreval("");
+fimProcedimento
+
+procedimento AvisoPerguntas()
+	escreval("_______________________________________________");
+	escreval("");
+	escreval("    Responda as perguntas a seguir com 'S'");
+	escreval("            para Sim e 'N' para não");
+	escreval("");
+	escreval("_______________________________________________");
+fimProcedimento
+
+// ===============================================================================================================================================================
+
+funcao texto BancoDeDados(texto caracteristicas[], inteiro maximo, texto vetorErrado[], inteiro somaErrado)
+	// Declarações
+	texto JoaoPessoa [7];
+	texto RiodeJaneiro [6];
+	texto SaoPaulo [7];
+	texto Fortaleza [7];
+	texto ChapadadosVeadeiros [9];
+	texto ChapadaDiamantina [8];
+	texto FozdoIguacu  [9];
+	texto Curitiba [5];
+	texto Brasilia [7];
+	texto Salvador [6];
+
+	inteiro i, opcao;
+	logico validos[20];
+	inteiro quantidade;
+// Declarações iniciais das variáveis com seus respectivos tipos (logico é a variável que indica verdadeiro ou falso)
+	//Instruções
+	JoaoPessoa [0] = "Praias" ;
+	JoaoPessoa [1] = "Tranquilidade" ;
+	JoaoPessoa [2] = "Turismo Historico" ;
+	JoaoPessoa [3] = "Passeios Paradisiacos " ;
+	JoaoPessoa [4] = "Lugar Barato" ;
+	JoaoPessoa [5] = "Altas Temparaturas" ;
+	// Declaração de vetores do destino em ordem e suas respectivas características.
+
+	validos[0] = VerificaVetor(JoaoPessoa, caracteristicas, maximo, vetorErrado, somaErrado);
+	// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+
+	RiodeJaneiro [0] = "Praias" ;
+	RiodeJaneiro [1] = "Cidade Movimentada" ;
+	RiodeJaneiro [2] = "Passeios Classicos e de Aventura";
+	RiodeJaneiro [3] = "Lugar Caro" ;
+	RiodeJaneiro [4] = "Altas Temperaturas" ;
+// Declaração de vetores do destino em ordem e suas respectivas características.
+	validos[1] = VerificaVetor(RiodeJaneiro, caracteristicas, maximo, vetorErrado, somaErrado);
+// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+	SaoPaulo [0]  = "Turismo Urbano";
+	SaoPaulo [1]  = "Riqueza Cultural";
+	SaoPaulo [2]  = "Cidade Movimentada";
+	SaoPaulo [3]  = "Lugar Caro";
+	SaoPaulo [4]  = "Temperaturas Amenas";
+// Declaração de vetores do destino em ordem e suas respectivas características.
+	validos[2] = VerificaVetor(SaoPaulo, caracteristicas, maximo, vetorErrado, somaErrado);
+// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+	Fortaleza [0] = "Praias";
+	Fortaleza [1] = "Turismo de Aventura";
+	Fortaleza [2] = "Resort Aquático";
+	Fortaleza [3] = "Turismo Familiar";
+	Fortaleza [4] = "Lugar Caro";
+	Fortaleza [5] = "Altas Temperaturas";
+// Declaração de vetores do destino em ordem e suas respectivas características.
+	validos[3] = VerificaVetor(Fortaleza, caracteristicas, maximo, vetorErrado, somaErrado);
+// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+	ChapadadosVeadeiros [0] = "Turismo de Aventura";
+	ChapadadosVeadeiros [1] = "Passeios de Aventura";
+	ChapadadosVeadeiros [2] = "Riqueza Natural";
+	ChapadadosVeadeiros [3] = "Lugar Barato";
+	ChapadadosVeadeiros [4] = "Cachoeiras";
+	ChapadadosVeadeiros [5] = "Parque de Biodiversidade";
+	ChapadadosVeadeiros [6] = "Altas Temperaturas";
+// Declaração de vetores do destino em ordem e suas respectivas características.
+	validos[4] = VerificaVetor(ChapadadosVeadeiros, caracteristicas, maximo, vetorErrado, somaErrado);
+// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+	ChapadaDiamantina [0] = "Turismo de Aventura";
+	ChapadaDiamantina [1] = "Riqueza Natural";
+	ChapadaDiamantina [2] = "Serras e Planaltos";
+	ChapadaDiamantina [3] = "Rios e Lado";
+	ChapadaDiamantina [4] = "Turismo Historico";
+	ChapadaDiamantina [5] = "Lugar Barato";
+	ChapadaDiamantina [6] = "Altas Temperaturas";
+// Declaração de vetores do destino em ordem e suas respectivas características.
+	validos[5] = VerificaVetor(ChapadaDiamantina, caracteristicas, maximo, vetorErrado, somaErrado);
+// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+	FozdoIguacu [0] = "Turismo historico";
+	FozdoIguacu [1] = "Cataratas/Cachoeiras";
+	FozdoIguacu [2] = "Riqueza natural e cultural";
+	FozdoIguacu [3] = "Passeios radicais";
+	FozdoIguacu [4] = "Lugar Caro";
+	FozdoIguacu [5] = "Temperaturas Amenas";
+// Declaração de vetores do destino em ordem e suas respectivas características.
+	validos[6] = VerificaVetor(FozdoIguacu, caracteristicas, maximo, vetorErrado, somaErrado);
+// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+	Curitiba [0] = "Turismo historico";
+	Curitiba [1] = "Passeios em família";
+	Curitiba [2] = "Temperaturas amenas";
+	Curitiba [3] = "Riqueza cultural";
+	Curitiba [4] = "Lugar Caro";
+// Declaração de vetores do destino em ordem e suas respectivas características
+	validos[7] = VerificaVetor(Curitiba, caracteristicas, maximo, vetorErrado, somaErrado);
+// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+	Brasilia [0] = "Turismo cultural " ;
+	Brasilia [1] = "arquitetura moderna" ;
+	Brasilia [2] = "Temperaturas amenas" ;
+	Brasilia [3] = "Riqueza cultural" ;
+	Brasilia [4] = "Lugar Barato" ;
+	Brasilia [5] = "centro político" ;
+// Declaração de vetores do destino em ordem e suas respectivas características
+	validos[8] = VerificaVetor(Brasilia, caracteristicas, maximo, vetorErrado, somaErrado);
+// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+	Salvador [0] = "Turismo histórico";
+	Salvador [1] = "Praias";
+	Salvador [2] = "Altas temperaturas";
+	Salvador [3] = "Riqueza cultural";
+	Salvador [4] = "Lugar Barato";
+	Salvador [5] = "centro de cultura afrobrasileira";
+// Declaração de vetores do destino em ordem e suas respectivas características
+	validos[9] = VerificaVetor(Salvador, caracteristicas, maximo, vetorErrado, somaErrado);
+// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+	quantidade = 0;
+	//escreval("");
+	// Quantidade de vetores válidos, inicialização em 0 para começar a fazer os testes.
+	para (i de 0 ate 9 passo 1)faca
+	// Verificação de vetores válidos de todos os destinos.
+		//escreval(validos[i] + "---" + i);
+		se (validos[i] == verdadeiro) entao
+			quantidade = quantidade + 1;
+			// Soma de quantidades de respostas verdadeiras compatíveis.
+		fimSe
+	fimPara
+	//escreval("");
+
+	se (quantidade == 1) entao
+		para (i de 0 ate 9 passo 1) faca
+			se (validos[i] == verdadeiro) entao
+				escolha(i) // Significa que eu ja tenho a resposta do destino final compatível
+				caso 0 // Ordenação básica e teste de qual dos destinos é verdadeiro para imprimir na tela
+					ImprimeViagem("JOAO PESSOA", JoaoPessoa);
+					interrompa;
+				caso 1
+					ImprimeViagem("RIO DE JANEIRO", RiodeJaneiro);
+					interrompa;
+				caso 2
+					ImprimeViagem("SÃO PAULO", SaoPaulo);
+					interrompa;
+				caso 3
+					ImprimeViagem("FORTALEZA", Fortaleza);
+					interrompa;
+				caso 4
+					ImprimeViagem("CHAPADA DOS VEADEIROS", ChapadadosVeadeiros);
+					interrompa;
+				caso 5
+					ImprimeViagem("CHAPADA DIAMANTINA", ChapadaDiamantina);
+					interrompa;
+				caso 6
+					ImprimeViagem("FOZ DO IGUAÇU", FozdoIguacu);
+					interrompa;
+				caso 7
+					ImprimeViagem("CURITIBA", Curitiba);
+					interrompa;
+				caso 8
+					ImprimeViagem("BRASÍLIA", Brasilia);
+					interrompa;
+				caso 9
+					ImprimeViagem("SALVADOR", Salvador);
+					interrompa;
+				fimEscolha
+			fimSe
+		fimPara
+		retorna "finaliza"; // Resposta de destino compatível do Bando de dados
+	fimSe
+
+	se (quantidade == 0) entao
+		escreval(" Lamento! Infelizmente não temos destinos disponíveis para você hoje");
+	fimSe
+	// Caso não seja possível determinar um destino válido dentro das repostas fornecidas.
+
+	se (quantidade > 1) entao // Caso tenhámos mais de 1 destino compatível
+		para (i de 0 ate 9 passo 1) faca // Retorna uma característica do primeiro destino compatível
+			se (validos[i] == verdadeiro) entao
+				//escreval(validos[i] + "--" + i);
+				escolha(i)
+				caso 0
+					retorna JoaoPessoa[maximo + 1]; // máximo é a quantidade de respostas certas "sim" fornecidas
+					interrompa;
+				caso 1
+					retorna RiodeJaneiro[maximo + 1];
+					interrompa;
+				caso 2
+					retorna SaoPaulo[maximo + 1];
+					interrompa;
+				caso 3
+					retorna Fortaleza[maximo + 1];
+					interrompa;
+				caso 4
+					retorna ChapadadosVeadeiros[maximo + 1];
+					interrompa;
+				caso 5
+					retorna ChapadaDiamantina[maximo + 1];
+					interrompa;
+				caso 6
+					retorna FozdoIguacu[maximo + 1];
+					interrompa;
+				caso 7
+					retorna Curitiba[maximo + 1];
+					interrompa;
+				caso 8
+					retorna Brasilia[maximo + 1];
+					interrompa;
+				caso 9
+					retorna Salvador[maximo + 1];
+					interrompa;
+				fimEscolha
+			fimSe
+		fimPara
+	fimSe
+
+	retorna "finaliza"; // quando só sobra 1 vetor verdadeiro quando já se tem a resposta do destino final
+fimFuncao
+
+// ===============================================================================================================================================================
+
+funcao logico VerificaVetor(texto local[], texto caracteristicas[], inteiro maximo, texto caractFalsas[], inteiro maxErrado)
+/* local = vetor do lugar
+ * características = respostas sim fornecidas
+ * maximo = quantas repostas sim fornecidas
+ * caractFalsas = respostas não fornecidas
+ * maxErrado = quantidade de respostas não dadas
+ */
+
+	inteiro i, a;
+	logico vetor[10], vetorFalso[10], achei;
+	achei = falso;
+	// achei= caso ache uma resposta ompatível com a característica do local
+
+	para(i de 0 ate 4 passo 1) faca // Testar todas as características do local com todas as respostas sim fornecidas
+		achei = falso;
+		//escreval("achei = falso");
+		para (a de 0 ate maximo passo 1) faca
+			//escreval(local[i]);
+			se (comparaTexto(local[i], caracteristicas[a]) == 0) entao
+				//escreval("Salvei verdadeiro: " + a);
+				vetor[i] = verdadeiro;
+				achei = verdadeiro;
+			senao
+				se(achei == falso) entao
+					vetor[i] = falso;
+					//escreval("Salvei falso: " + a);
+				senao
+					//escreval("Nao salvei pq é verdadeiro");
+				fimSe
+			fimSe
+		fimPara
+	fimPara
+
+	//escreval("entrou");
+	para(i de 0 ate 4 passo 1) faca //Testar todas as características do local com todas as respostas nao fornecidas
+		achei = verdadeiro;
+		//escreval("achei = falso");
+		para (a de 0 ate maxErrado passo 1) faca
+			//escreval(local[i]);
+			se (comparaTexto(local[i], caractFalsas[a]) == 0) entao
+				//escreval("Salvei falso: " + a);
+				//escreval(caractFalsas[a]);
+				vetorFalso[i] = falso;
+				achei = falso;
+			senao
+				se(achei == verdadeiro) entao
+					vetorFalso[i] = verdadeiro;
+					//escreval("Salvei verdadeiro: " + a);
+				senao
+					//escreval("Nao salvei pq é verdadeiro");
+				fimSe
+			fimSe
+		fimPara
+	fimPara
+
+	se (maximo == -1) entao // Nenhuma resposta sim foi fornecida ainda
+		para (i de 0 ate 0 passo 1) faca
+			se (vetorFalso[i] == falso) entao // Testar as respostas não é compatível com  característica do local
+				retorna falso; // Local n é compatível
+			fimSe
+		fimPara
+	fimSe
+
+	//escreval(vetor[0] + " " + vetor[1] + " " + vetor[2]);
+
+	para (i de 0 ate maximo passo 1) faca 
+		se (vetor[i] == falso) entao // Testar respostas sim fornecidas se não existe essa característica no local
+			retorna falso; // Local n é compatível
+		fimSe
+	fimPara
+
+	para (i de 0 ate maxErrado passo 1) faca
+		se (vetorFalso[i] == falso) entao// Testar respostas não fornecidas se existe essa carcaterística  no local
+			retorna falso; // Local n é compatível
+		fimSe
+	fimPara
+
+	retorna verdadeiro;  // Local é compatível
+fimFuncao
+
+// ===============================================================================================================================================================
+
+procedimento ImprimeViagem(texto nome, texto vetor[]) // Colocar na tela o destino escolhido
+	escreval("");
+	escreval("");
+	escreval(" Você combina muito com " + nome + "!");
+	escreval("");
+	escreval(" Caracteristicas:");
+	escreval("");
+	escreval(" 1- " + vetor[0]);
+	escreval(" 2- " + vetor[1]);
+	escreval(" 3- " + vetor[2]);
+	escreval(" 4- " + vetor[3]);
+	escreval(" 5- " + vetor[4]);
+fimProcedimento
+
+// ===============================================================================================================================================================
+
+funcao texto BancoDeDadosInternacional(texto caracteristicas[], inteiro maximo, texto vetorErrado[], inteiro somaErrado)
+	// Declarações
+	texto Orlando [6];
+	texto Cancun [5];
+	texto NovaYork [5];
+	texto Paris [6];
+	texto Miami [7];
+	texto PuntaCana [6];
+	texto Lisboa [6];
+	texto BuenosAires [6];
+	texto Santiago [6];
+	texto Dubai [7];
+
+	inteiro i, opcao;
+	logico validos[20];
+	inteiro quantidade;
+	// Declarações iniciais das variáveis com seus respectivos tipos (logico é a variável que indica verdadeiro ou falso)
+
+	//Instruções
+	Orlando [0] = "Turismo de aventura";
+	Orlando [1] = "Progrmação familiar ";
+	Orlando [2] = "Parques de diversão";
+	Orlando [3] = "Compras";
+	Orlando [4] = "Língua Inglesa";
+	Orlando [5] = "11h de viagem";
+// Declaração de vetores do destino em ordem e suas respectivas características.
+	//escreval("-------ORLANDO-------");
+	validos[0] = VerificaVetor(Orlando, caracteristicas, maximo, vetorErrado, somaErrado);
+	// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+	//escreval("-------ORLANDO-------");
+
+	Cancun [0] = "Praias paradisíacas";
+	Cancun [1] = "Lingua Espanhola";
+	Cancun [2] = "Altas temperaturas";
+	Cancun [3] = "10h30 de viagem";
+	Cancun [4] = "Programação casal";
+// Declaração de vetores do destino em ordem e suas respectivas características.
+	validos[1] = VerificaVetor(Cancun, caracteristicas, maximo, vetorErrado, somaErrado);
+	// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+
+	NovaYork [0] = "Turismo cultural";
+	NovaYork [1] = "Lingua Inglesa";
+	NovaYork [2] = "09h30 de viagem";
+	NovaYork [3] = "Rios";
+	NovaYork [4] = "Compras";
+// Declaração de vetores do destino em ordem e suas respectivas características.
+	validos[2] = VerificaVetor(NovaYork, caracteristicas, maximo, vetorErrado, somaErrado);
+	// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+
+	Paris [0] = "Turismo historico";
+	Paris [1] = "Lingua Francesa";
+	Paris [2] = "Museus";
+	Paris [3] = "11h20 de viagem";
+	Paris [4] = "Alta gastronomia";
+	Paris [5] = "Programas Casal";
+// Declaração de vetores do destino em ordem e suas respectivas características.
+	validos[3] = VerificaVetor(Paris, caracteristicas, maximo, vetorErrado, somaErrado);
+	// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+
+	Miami [0] = "Praias";
+	Miami [1] = "Compras";
+	Miami [2] = "08h30 de viagem";
+	Miami [3] = "Lingua Inglesa";
+	Miami [4] = "Surf";
+	Miami [5] = "Cidade movimentada";
+// Declaração de vetores do destino em ordem e suas respectivas características.
+	validos[4] = VerificaVetor(Miami, caracteristicas, maximo, vetorErrado, somaErrado);
+	// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+
+	PuntaCana [0] = "Praias";
+	PuntaCana [1] = "Altas Temperaturas";
+	PuntaCana [2] = "10h30 de viagem";
+	PuntaCana [3] = "Programacao Casal";
+	PuntaCana [4] = "Turismo de aventura";
+	PuntaCana [5] = "Lingua Espanhola";
+// Declaração de vetores do destino em ordem e suas respectivas características.
+	validos[5] = VerificaVetor(PuntaCana, caracteristicas, maximo, vetorErrado, somaErrado);
+	// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+
+	Lisboa [0]= "Turismo historico";
+	Lisboa [1]= "Lingua Portuguesa";
+	Lisboa [2]= "Passeios históricos";
+	Lisboa [3]= "09h30 de viagem";
+	Lisboa [4]= "Programacao Casal";
+	Lisboa [5]= "Alta Gastronomia";
+// Declaração de vetores do destino em ordem e suas respectivas características.
+	validos[6] = VerificaVetor(Lisboa, caracteristicas, maximo, vetorErrado, somaErrado);
+	// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+
+	BuenosAires [0] = "Turismo histórico";
+	BuenosAires [1] = "Turismo cultural";
+	BuenosAires [2] = "Lingua Espanhol";
+	BuenosAires [3] = "Progamacao Casal";
+	BuenosAires [4] = "3h de viagem";
+	BuenosAires [5] = "Economia";
+// Declaração de vetores do destino em ordem e suas respectivas características.
+	validos[7] = VerificaVetor(BuenosAires, caracteristicas, maximo, vetorErrado, somaErrado);
+	// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+
+	Santiago [0] = "Turismo cultural";
+	Santiago [1] = "Turismo de aventura";
+	Santiago [2] = "Ski";
+	Santiago [3] = "Lingua Espanhola";
+	Santiago [4] = "Parque de biodiversidade";
+	Santiago [5] = "4h de viagem";
+// Declaração de vetores do destino em ordem e suas respectivas características.
+	validos[8] = VerificaVetor(Santiago, caracteristicas, maximo, vetorErrado, somaErrado);
+	// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+
+	Dubai [0] = "Turismo cultural";
+	Dubai [1] = "Ambiente Luxuoso";
+	Dubai [2] = "14h30 de viagem";
+	Dubai [3] = "Lingua Arabe";
+	Dubai [4] = "Lugar Caro";
+	Dubai [5] = "Arquitetura Ultrmoderna";
+	Dubai [6] = "Cidade movimentada";
+// Declaração de vetores do destino em ordem e suas respectivas características.
+	validos[9] = VerificaVetor(Dubai, caracteristicas, maximo, vetorErrado, somaErrado);
+	// Verificação a partir do vetor de respostas fornecidas se esse destino é compatível com o perfil das respostas do usuário
+
+	quantidade = 0;
+	//escreval("");
+	// Quantidade de vetores válidos, inicialização em 0 para começar a fazer os testes.
+	para (i de 0 ate 9 passo 1)faca
+	// Verificação de vetores válidos de todos os destinos.
+		//escreval(validos[i] + "---" + i);
+		se (validos[i] == verdadeiro) entao
+			quantidade = quantidade + 1;
+		fimSe
+	fimPara
+	//escreval("");
+
+	se (quantidade == 1) entao
+		para (i de 0 ate 9 passo 1) faca 
+			se (validos[i] == verdadeiro) entao
+				escolha(i)// Significa que eu ja tenho a resposta do destino final compatível
+				caso 0// Ordenação básica e teste de qual dos destinos é verdadeiro para imprimir na tela
+					ImprimeViagem("ORLANDO", Orlando);
+					interrompa;
+				caso 1
+					ImprimeViagem("CANCUN", Cancun);
+					interrompa;
+				caso 2
+					ImprimeViagem("NOVA YORK", NovaYork);
+					interrompa;
+				caso 3
+					ImprimeViagem("PARIS", Paris);
+					interrompa;
+				caso 4
+					ImprimeViagem("MIAMI", Miami);
+					interrompa;
+				caso 5
+					ImprimeViagem("PUNTA CANA", PuntaCana);
+					interrompa;
+				caso 6
+					ImprimeViagem("LISBOA", Lisboa);
+					interrompa;
+				caso 7
+					ImprimeViagem("BUENOS AIRES", BuenosAires);
+					interrompa;
+				caso 8
+					ImprimeViagem("SANTIAGO", Santiago);
+					interrompa;
+				caso 9
+					ImprimeViagem("DUBAI", Dubai);
+					interrompa;
+				fimEscolha
+			fimSe
+		fimPara
+		retorna "finaliza";
+	fimSe
+
+	se (quantidade == 0) entao
+		escreval("Lamento! Infelizmente não temos destinos disponíveis para você hoje");
+	fimSe
+// Caso não seja possível determinar um destino válido dentro das repostas fornecidas.
+	se (quantidade > 1) entao // Caso tenhámos mais de 1 destino compatível
+		para (i de 0 ate 9 passo 1) faca // Retorna uma característica do primeiro destino compatível
+			se (validos[i] == verdadeiro) entao
+				//escreval(validos[i] + "--" + i);
+				escolha(i)
+				caso 0
+					retorna Orlando[maximo + 1]; // máximo é a quantidade de respostas certas "sim" fornecidas
+					interrompa;
+				caso 1
+					retorna Cancun[maximo + 1];
+					interrompa;
+				caso 2
+					retorna NovaYork[maximo + 1];
+					interrompa;
+				caso 3
+					retorna Paris[maximo + 1];
+					interrompa;
+				caso 4
+					retorna Miami[maximo + 1];
+					interrompa;
+				caso 5
+					retorna PuntaCana[maximo + 1];
+					interrompa;
+				caso 6
+					retorna Lisboa[maximo + 1];
+					interrompa;
+				caso 7
+					retorna BuenosAires[maximo + 1];
+					interrompa;
+				caso 8
+					retorna Santiago[maximo + 1];
+					interrompa;
+				caso 9
+					retorna Dubai[maximo + 1];
+					interrompa;
+				fimEscolha
+			fimSe
+		fimPara
+	fimSe
+
+	retorna "finaliza"; // quando só sobra 1 vetor verdadeiro quando já se tem a resposta do destino final
+fimFuncao
